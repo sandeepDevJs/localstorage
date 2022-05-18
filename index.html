@@ -40,11 +40,18 @@
             <input type="text" name="item" placeholder="Item Name" required>
             <input type="submit" value="+ Add Item">
         </form>
+        <button id="uncheck-btn">Uncheck All</button>
+        <button id="check-btn">Check All</button>
+        <button id="delete-btn">Delete All</button>
     </div>
 
     <script>
         const addItems = document.querySelector('.add-items');
         const itemsList = document.querySelector('.plates');
+        const checkAllBtn = document.querySelector("#check-btn");
+        const UncheckAllBtn = document.querySelector("#uncheck-btn");
+        const delAllBtn = document.querySelector("#delete-btn");
+
         const items = JSON.parse(localStorage.getItem("items")) || [];
 
         function addItem(e) {
@@ -78,9 +85,9 @@
             }).join("")
         }
 
-        
+
         function toggleDone(e) {
-            if(!e.target.matches("input")) return;
+            if (!e.target.matches("input")) return;
 
             const el = e.target;
             const index = el.dataset.index;
@@ -93,6 +100,28 @@
 
         addItems.addEventListener("submit", addItem);
         itemsList.addEventListener("click", toggleDone);
+        checkAllBtn.addEventListener("click", checkAll);
+        UncheckAllBtn.addEventListener("click", UnCheckAll);
+        delAllBtn.addEventListener("click", delAll);
+
+        function checkAll(e) {
+            const its = items.map(e => ({ ...e, done: true }));
+            populateList(its, itemsList);
+            localStorage.setItem("items", JSON.stringify(its))
+        }
+
+        function UnCheckAll(e) {
+            const its = items.map(e => ({ ...e, done: false }));
+            populateList(its, itemsList)
+            localStorage.setItem("items", JSON.stringify(its))
+        }
+
+
+        function delAll(e) {
+            itemsList.innerHTML = "";
+            localStorage.removeItem("items")
+        }
+
 
         populateList(items, itemsList);
 
